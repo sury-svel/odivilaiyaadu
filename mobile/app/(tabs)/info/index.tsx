@@ -101,13 +101,13 @@ export default function InfoScreen() {
         
         <View style={styles.card}>
           <Text style={styles.cardTitle}>
-            {language === "ta" ? "ஓடி விளையாடு" : "Odi Vilayaadu"}
+            {language === "ta" ? "ஓடி விளையாடு" : "Odi Vilaiyaadu"}
           </Text>
           
           <Text style={styles.cardDescription}>
             {language === "ta" 
               ? "ஓடி விளையாடு என்பது AmChaTS மற்றும் ஔவையார் பாடசாலை (APS) ஆல் ஏற்பாடு செய்யப்பட்ட ஒரு வருடாந்திர பாரம்பரிய குழந்தைகள் விளையாட்டு நிகழ்வாகும். இது பம்பரம், கோலி குண்டு, கிட்டி புல், நொண்டி ஓட்டம், சாக்கு ஓட்டம், எலுமிச்சை ஓட்டம், வில் அம்பு, உந்தி வில், உரியடி போன்ற பாரம்பரிய விளையாட்டுகளை உள்ளடக்கியது."
-              : "Odi Vilayaadu is an annual traditional kids' games event organized by AmChaTS and Avvaiyar Padasalai (APS). It features traditional games like Pambaram, Kolli Gundu, Kitti Pull, Nondi Ottam, Saakku Ottam, Elumichai Ottam, Vilambu, Undi Vil, Uriyadi, and more."}
+              : "Odi Vilaiyaadu is an annual traditional kids' games event organized by AmChaTS and Avvaiyar Padasalai (APS). It features traditional games like Pambaram, Kolli Gundu, Kitti Pull, Nondi Ottam, Saakku Ottam, Elumichai Ottam, Vilambu, Undi Vil, Uriyadi, and more."}
           </Text>
           
           <View style={styles.gameImages}>
@@ -144,7 +144,7 @@ export default function InfoScreen() {
           </Text>
           
           <TouchableOpacity style={styles.contactLink} activeOpacity={0.7}>
-            <Text style={styles.contactLinkText}>info@odivilayaadu.org</Text>
+            <Text style={styles.contactLinkText}>appdevelopers@amchats.org</Text>
             <ExternalLink size={16} color={colors.primary} />
           </TouchableOpacity>
         </View>

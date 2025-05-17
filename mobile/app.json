@@ -1,33 +1,28 @@
 {
   "expo": {
-    "name": "odi-vilayaadu",
-    "slug": "odivilayaadu",
+    "name": "odi-vilaiyaadu",
+    "slug": "odivilaiyaadu",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo1.png",
-    "scheme": "odivilayaadu",
+    "icon": "./assets/images/logo4.png",
+    "scheme": "odivilaiyaadu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/logo2.png",
+      "image": "./assets/images/logo3.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.amchats.odivilayaadu",
+      "bundleIdentifier": "org.odivilaiyaadu",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "odivilayaadu"
-            ]
-          },
-          {
-            "CFBundleURLSchemes": [
-              "odivilayaadu"
+              "odivilaiyaadu"
             ]
           }
         ]
@@ -35,30 +30,16 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo4.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "org.amchats.odivilayaadu",
+      "package": "org.odivilaiyaadu",
       "intentFilters": [
         {
           "action": "VIEW",
           "data": [
             {
-              "scheme": "odiVilayaadu",
-              "host": "*",
-              "pathPrefix": "/"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        },
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "odiVilayaadu",
+              "scheme": "odivilaiyaadu",
               "host": "*",
               "pathPrefix": "/"
             }
@@ -102,16 +83,16 @@
     "experiments": {
       "typedRoutes": true
     },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "6f38f7d7-68ab-4fc4-bb00-99b7dfdb27e0"
-      }
-    },
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/6f38f7d7-68ab-4fc4-bb00-99b7dfdb27e0"
     },
-    "owner": "suryans"
+    "owner": "suryans",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f98279f7-ed2d-4455-aa10-d77109979907"
+      }
+    }
   }
 }
