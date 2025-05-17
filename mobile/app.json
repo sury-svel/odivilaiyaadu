@@ -1,0 +1,117 @@
+{
+  "expo": {
+    "name": "odi-vilayaadu",
+    "slug": "odivilayaadu",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo1.png",
+    "scheme": "odivilayaadu",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/logo2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.amchats.odivilayaadu",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "odivilayaadu"
+            ]
+          },
+          {
+            "CFBundleURLSchemes": [
+              "odivilayaadu"
+            ]
+          }
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "org.amchats.odivilayaadu",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "odiVilayaadu",
+              "host": "*",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "odiVilayaadu",
+              "host": "*",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
+      "googleServicesFile": "./credentials/google-services.json"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      "expo-notifications",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1",
+            "useFrameworks": "static",
+            "modularHeaders": [
+              "GoogleUtilities",
+              "FirebaseCoreInternal",
+              "FirebaseCore",
+              "FirebaseAppCheckInterop",
+              "FirebaseInstallations"
+            ]
+          },
+          "android": {
+            "useNextNotificationsApi": true,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6f38f7d7-68ab-4fc4-bb00-99b7dfdb27e0"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/6f38f7d7-68ab-4fc4-bb00-99b7dfdb27e0"
+    },
+    "owner": "suryans"
+  }
+}

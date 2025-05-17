@@ -1,0 +1,372 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "goBack": "Go Back",  
+    "next": "Next",
+    "done": "Done",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "submit": "Submit",
+    "continue": "Continue",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "more": "More",
+    "less": "Less",
+    "show": "Show",
+    "hide": "Hide",
+    "unauthorized": "Unauthorized Access",
+    "adminOnly": "This section is only accessible to administrators. Please login with an admin account to access this page.",
+    "success": "Success",
+    "error": "Error",
+    "close": "Close",
+    "remove": "Remove",
+    "manage": "Manage",
+    "add": "Add",
+    "name": "Name",
+    "years": "Years",
+    "email": "Email",
+    "phone": "Phone",
+    "start": "Start",
+    "end" : "End",
+    "publish": "Publish"
+
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "loginSuccess": "Login successful!",
+    "logoutSuccess": "Logout successful!",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "passwordTooShort": "Password must be at least 6 characters long.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordUpdated": "Your password has been updated successfully.",
+    "resetPassword": "Reset Password",
+    "forgotPassword": "Reset Password",
+    "email": "Enter your email to send code",
+    "sendCode": "Send Code",
+    "passwordResetSuccess": "Your password has been updated successfully.",
+    "recoveryCode": "Recovery Code"
+  },
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in to continue to your account",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "useRecoveryLink": "Reset password",
+    "noAccount": "Don't have an account?",
+    "demoAccounts": "Demo Accounts",
+    "demoPasswordNote": "Use 'password' for all demo accounts",
+    "demoLogin": "Demo Login",
+    "cognitoLogin": "AWS Cognito",
+    "error": {
+      "loginFailedTitle": "Login Failed",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Sign up to get started",
+    "whoAreYou": "I am a:",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "address": "Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "placeholders": {
+      "fullName": "Enter your full name",
+      "email": "Enter your email",
+      "phone": "Enter your phone number",
+      "address": "Enter your address",
+      "password": "Enter your password",
+      "confirmPassword": "Confirm your password"
+    },
+    "passwordRequirements": "Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters.",
+    "safetyAgreement": "I agree to the safety waiver and terms of service",
+    "registerButton": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "waiver": {
+      "title": "Safety Waiver",
+      "show": "Show",
+      "hide": "Hide",
+      "agree": "I agree to the safety waiver"
+    },
+    "cognitoRegister": "AWS Cognito",
+    "demoRegister": "Demo Register",
+    "error": {
+      "title": "Registration Failed",
+      "message": "An error occurred during registration. Please try again.",
+      "fullNameRequired": "Full name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid phone number (e.g., +1234567890)",
+      "addressRequired": "Address is required",
+      "passwordRequired": "Password is required",
+      "passwordLength": "Password must be at least 6 characters",
+      "passwordComplexity": "Password must include uppercase, lowercase, numbers, and special characters",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "safetyAgreementRequired": "You must agree to the safety waiver"
+    },
+    "success": {
+      "title": "Registration Successful",
+      "message": "Your account has been created successfully!",
+      "verifyEmail": "Please check your email to verify your account before logging in."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "personalInfo": "Personal Information",
+    "preferences": "Preferences",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Dark Mode",
+    "notifications": "Notifications",
+    "changePassword": "Change Password",
+    "logout": "Logout",
+    "deleteAccount": "Delete Account",
+    "cognitoAuthenticated": "Secured with AWS Cognito",
+    "fields": {
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "notLoggedIn": {
+      "title": "Not Logged In",
+      "message": "Please login to view and manage your profile"
+    },
+    "logoutConf": {
+      "confirmTitle": "Confirm Logout",
+      "confirmMessage": "Are you sure you want to logout?"
+    },
+    "delete": {
+      "confirmTitle": "Delete Account",
+      "confirmMessage": "Are you sure you want to delete your account? This action cannot be undone."
+    }
+  },
+  "roles": {
+    "parent": "Parent",
+    "volunteer": "Volunteer",
+    "admin": "Admin"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Browse upcoming and past events",
+    "current": "Current Events",
+    "upcoming": "Upcoming Events",
+    "viewAll": "View All Events",
+    "noEventsFound": "No events found",
+    "registeredCount": "Registered: {{count}}",
+    "status": {
+      "active": "Active",
+      "open": "Open",      
+      "upcoming": "Upcoming",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "scheduled": "Scheduled"
+    },
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "upcoming": "Upcoming",
+      "past": "Past"
+    },
+    "edit": {
+      "title": "Edit Event",
+      "imageUrl": "Image URL",
+      "basicInfo": "Basic Information",
+      "location": "Location",
+      "description": "Description",
+      "infoText": "Event Information"
+    },
+    "management": "Event Management",
+    "delete": {
+      "confirmTitle": "Delete Event",
+      "confirmMessage": "Are you sure you want to delete this event? This action cannot be undone.",
+      "success": "Event deleted successfully",
+      "error": "Failed to delete event"
+    },
+    "fields": {
+      "name": "Event Name",
+      "date": "Event Date",
+      "locationName": "Location Name",
+      "locationAddress": "Location Address",
+      "description": "Description"      
+    },
+    "settings": "Event Settings",
+    "registrationStatus": "Registration Status"
+  },
+  "games": {
+    "title": "Games",
+    "management": "Game Management",
+    "noGamesFound": "No games found",
+    "selectGames": "Select Games",
+    "division": "Division",
+    "maxPlayers": "Maximum Players",
+    "description": "Description",
+    "rules": "Rules",
+    "registeredChildren": "Registered Children",
+    "registerChild": "Register",
+    "unregisterChild": "Unregister",
+    "location": "Location",
+    "scoringType": "Scoring Type",
+    "delete": {
+      "confirmTitle": "Delete Game",
+      "confirmMessage": "Are you sure you want to delete this game? This action cannot be undone.",
+      "success": "Game deleted successfully",
+      "error": "Failed to delete game"
+    }
+  },
+  "children": {
+    "title": "Children",
+    "childDetails": "Child Details",
+    "addChild": "Add Child",
+    "editChild": "Edit Child",
+    "add": "Add Child",
+    "addPrompt": "Add your child's information to register them for events and games",
+    "noChildren": "No children added yet",
+    "addSuccess": "Child added successfully",
+    "registeredGames": "Registered Games",
+    "registerForGames": "Register For Games",
+    "noRegisteredGames": "No Registered Games",
+    "personalInfo": "Personal Information",
+    "otherInfo": "Other Information",
+    "ageYears": "Age (years)",
+    "noResults": "No results available",
+    "results": "Results",
+    "fields": {
+      "name": "Child's Name",
+      "age": "Age",
+      "ageYears": "Age (years)",
+      "dateOfBirth": "Date of Birth",
+      "photo": "Profile Photo",
+      "gender": "Gender",
+      "tamilSchoolGrade": "Tamil School/Grade",
+      "tamilSchool": "Tamil School",
+      "tamilGrade": "Tamil Grade",
+      "medicalInfo": "Medical Information",
+      "notes": "Notes",
+      "personalInfo": "Personal Information",
+      "results": "Results"
+    },
+    "genders": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "divisionInfo": "Age Divisions"
+  },
+  "home": {
+    "title": "American Charitable Tamil Society & Avvaiyar Padasalai",
+    "subtitle": "Odi Vilaiyaadu Kids Event",
+    "welcome": "Welcome, {{name}}!",
+    "loginPrompt": "Please login or register to access all features",
+    "aboutUs": "About Us",
+    "aboutDescription": "American Charitable Tamil Society and Avvaiyar Padasalai are proud to present Odi Vilaiyaadu, a fun-filled event for children to engage in traditional Tamil games and activities. Join us to celebrate our cultural heritage and create lasting memories."
+  },
+  "tabs": {
+    "home": "Home",
+    "events": "Events",
+    "parent": "Parent",
+    "volunteer": "Volunteer",
+    "admin": "Admin",
+    "info": "Info",
+    "profile": "Profile"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "events": "Events",
+    "games": "Games",
+    "volunteers": "Volunteers",
+    "settings": "Settings",
+    "savesettings": {
+      "saveSuccess": "Settings saved successfully"
+    }
+  },
+  "volunteer": {
+    "title": "Volunteers",
+    "management": "Volunteer Management",
+    "list": "Volunteer List",
+    "noVolunteersFound": "No volunteers found",
+    "details": "Volunteer Details",
+    "assignedGames": "Assigned Games",
+    "noAssignedGames": "No games assigned yet",
+    "assignGames": "Assign Games",
+    "assignVolunteers": "Assign Volunteers",
+    "addVolunteer": "Add Volunteer",
+    "selectVolunteer": "Select Volunteer",
+    "assign": "Assign",
+    "assignToGame": "Assign",
+    "unassignFromGame": "Unassign",
+    "information":"Information",
+    "reportingTime":"Reporting Time",
+    "reportingTimeValue":"Reporting Time Value", 
+    "reportingLocation":"Reporting Location",
+    "reportingLocationValue":"Reporting Location Value",    
+    "responsibilities":"Responsibilities",   
+    "responsibilitiesValue":"Responsibilities Value",  
+    "startConfirmTitle"  : "Start Game?" ,
+    "startConfirmMsg":"Are you sure you want to start now?",
+    "endConfirmTitle": "End Game?",
+    "endConfirmMsg": "Have you finished entering all scores?",
+    "publishConfirmTitle"  : "Publish Results?" ,
+    "publishConfirmMsg":"Are you sure you want to publish the results?",
+    "assignstatus": {
+      "success": "Volunteer assigned successfully",
+      "error": "Failed to assign volunteer"
+    },
+    "unassign": {
+      "success": "Volunteer unassigned successfully",
+      "error": "Failed to unassign volunteer"
+    },
+    "delete": {
+      "confirmTitle": "Delete Volunteer",
+      "confirmMessage": "Are you sure you want to delete this volunteer? This action cannot be undone.",
+      "success": "Volunteer deleted successfully",
+      "error": "Failed to delete volunteer"
+    },
+    "status": {
+      "assigned": "Assigned"
+    }
+  },
+  "language": {
+    "defaultLanguage": "Default Language",
+    "tamil": "Tamil",
+    "english": "English"
+  },
+  "settings": {
+    "notifications": "Notifications",
+    "enabled": "Enabled"
+  },
+  "notifications": {
+    "sent": "Notifications Sent"
+  }
+
+}
