@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'org.amchats.odivilayaadu'
+    namespace 'org.odivilaiyaadu'
     defaultConfig {
-        applicationId 'org.amchats.odivilayaadu'
+        applicationId 'org.odivilaiyaadu'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

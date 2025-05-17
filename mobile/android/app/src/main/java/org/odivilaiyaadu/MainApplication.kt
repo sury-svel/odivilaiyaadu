@@ -1,4 +1,4 @@
-package org.amchats.odivilayaadu
+package org.odivilaiyaadu
 
 import android.app.Application
 import android.content.res.Configuration
