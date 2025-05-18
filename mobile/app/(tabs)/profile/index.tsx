@@ -103,7 +103,11 @@ export default function ProfileScreen() {
   
   const handleEditProfile = () => {
     // Navigate to edit profile screen TBD
- //   router.push("/profile/edit");
+    //   router.push("/profile/edit");
+    Alert.alert(
+      "Coming Soon",
+      "The Edit Profile feature will be available in a future update."
+    );
   };
   
   return (
@@ -174,7 +178,7 @@ export default function ProfileScreen() {
             <LanguageToggle />
           </View>
 
-          <View style={styles.preferenceItem}>
+          {/* <View style={styles.preferenceItem}>
             <View style={styles.preferenceLeft}>
               <Bell size={20} color={colors.text.tertiary} />
               <Text style={styles.preferenceLabel}>
@@ -200,7 +204,7 @@ export default function ProfileScreen() {
               trackColor={{ false: colors.border, true: `${colors.primary}80` }}
               thumbColor={darkMode ? colors.primary : "#f4f3f4"}
             />
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.section}>

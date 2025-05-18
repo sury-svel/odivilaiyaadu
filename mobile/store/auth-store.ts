@@ -118,10 +118,6 @@ export const useAuthStore = create<AuthState>()(
           }
 
           //0: Check if the email already exists
-          // const { data: existingUser, error } = await supabase
-          //   .from("user_profiles")
-          //   .select("email", { head: true, count: "exact" })
-          //   .maybeSingle();
 
           const { count, error } = await supabase
             .from("user_profiles")
@@ -145,7 +141,7 @@ export const useAuthStore = create<AuthState>()(
             email,
             password,
             options: {
-              emailRedirectTo: 'https://forms.zohopublic.com/avvaiyarpadasalai/form/2025CTOdiVilayaduRegistration/formperma/_307_Ca7My96CKK2btVxhcglNikwQYutE5qZoRFSl5c'
+              emailRedirectTo: 'https://www.amchats.org/tyov2025'
             }            
           });
 

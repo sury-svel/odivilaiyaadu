@@ -73,7 +73,7 @@ export default function AmChaTSScreen() {
             {language === "ta" ? "நிகழ்வுகள் & செயல்பாடுகள்" : "Events & Activities"}
           </Text>
           
-          <View style={styles.activityItem}>
+          {/* <View style={styles.activityItem}>
             <Calendar size={24} color={colors.primary} />
             <View style={styles.activityContent}>
               <Text style={styles.activityTitle}>
@@ -85,7 +85,7 @@ export default function AmChaTSScreen() {
                   : "Annual harvest festival celebration"}
               </Text>
             </View>
-          </View>
+          </View> */}
           
           {/* <View style={styles.activityItem}>
             <Calendar size={24} color={colors.primary} />
@@ -183,7 +183,7 @@ export default function AmChaTSScreen() {
               : "Join the AmChaTS family and help preserve and celebrate Tamil culture."}
           </Text>
           <Button 
-            title={language === "ta" ? "உறுப்பினராகு" : "Become a Member"}
+            title={language === "ta" ? "உறுப்பினராக‌" : "Become a Member"}
             onPress={handleWebsite}
             style={styles.joinButton}
           />
@@ -290,13 +290,12 @@ const styles = StyleSheet.create({
   },
   joinText: {
     fontSize: 16,
-    color: "rgba(255, 255, 255, 0.9)",
+    color: "white",
     textAlign: "center",
     marginBottom: 16,
     lineHeight: 24,
   },
   joinButton: {
-    backgroundColor: "white",
     minWidth: 200,
   },
 });

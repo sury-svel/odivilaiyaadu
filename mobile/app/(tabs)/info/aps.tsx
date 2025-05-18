@@ -157,7 +157,7 @@ export default function APSScreen() {
             <Calendar size={24} color={colors.primary} />
             <View style={styles.eventContent}>
               <Text style={styles.eventTitle}>
-                {language === "ta" ? "ஆண்டு இறுதி நிகழ்ச்சி" : "Annual Day Performance"}
+                {language === "ta" ? "ஆண்டு விழா நிகழ்ச்சி" : "Annual Day Performance"}
               </Text>
               <Text style={styles.eventDescription}>
                 {language === "ta" 
@@ -167,7 +167,7 @@ export default function APSScreen() {
             </View>
           </View>
           
-          <View style={styles.eventItem}>
+          {/* <View style={styles.eventItem}>
             <Calendar size={24} color={colors.primary} />
             <View style={styles.eventContent}>
               <Text style={styles.eventTitle}>
@@ -180,17 +180,17 @@ export default function APSScreen() {
               </Text>
             </View>
           </View>
-          
+           */}
           <View style={styles.eventItem}>
             <Calendar size={24} color={colors.primary} />
             <View style={styles.eventContent}>
               <Text style={styles.eventTitle}>
-                {language === "ta" ? "தமிழ் மொழி போட்டிகள்" : "Tamil Language Competitions"}
+                {language === "ta" ? "பொங்கல் விழா" : "Pongal Festival"}
               </Text>
               <Text style={styles.eventDescription}>
                 {language === "ta" 
-                  ? "பேச்சு, கட்டுரை, கவிதை, மற்றும் பிற தமிழ் மொழி போட்டிகள்" 
-                  : "Speech, essay, poetry, and other Tamil language competitions"}
+                  ? "வருடாந்திர அறுவடை திருவிழா கொண்டாட்டம்" 
+                  : "Annual harvest festival celebration"}
               </Text>
             </View>
           </View>
@@ -224,15 +224,15 @@ export default function APSScreen() {
         
         <View style={styles.joinSection}>
           <Text style={styles.joinTitle}>
-            {language === "ta" ? "இன்றே சேருங்கள்!" : "Join Today!"}
+            {language === "ta" ? "இன்றே சேருங்கள்!" : "Join Our Team!"}
           </Text>
           <Text style={styles.joinText}>
             {language === "ta" 
-              ? "உங்கள் குழந்தைக்கு தமிழ் மொழி மற்றும் பண்பாட்டைக் கற்பிக்க எங்களுடன் இணையுங்கள்." 
-              : "Join us to teach your child Tamil language and culture."}
+              ? "நம் குழந்தைகளுக்குத் தமிழ் மொழி மற்றும் பண்பாட்டைக் கற்பிக்க எங்களுடன் இணையுங்கள்." 
+              : "Join with us as a volunteer to teach our children Tamil language and culture."}
           </Text>
           <Button 
-            title={language === "ta" ? "இப்போது பதிவு செய்யவும்" : "Register Now"}
+            title={language === "ta" ? "இணையவும்" : "Join Us"}
             onPress={handleRegister}
             style={styles.joinButton}
           />
@@ -356,13 +356,14 @@ const styles = StyleSheet.create({
   },
   joinText: {
     fontSize: 16,
-    color: "rgba(255, 255, 255, 0.9)",
+    color: "white",
     textAlign: "center",
     marginBottom: 16,
     lineHeight: 24,
   },
   joinButton: {
-    backgroundColor: "white",
+    fontSize: 13,
+    color: colors.text.tertiary,
     minWidth: 200,
   },
 });
