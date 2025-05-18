@@ -53,5 +53,12 @@
     "typescript": "~5.8.3",
     "@react-native-community/cli": "latest"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false
+      }
+    }
+  },
   "private": true
 }
