@@ -105,7 +105,10 @@ export default function ProfileScreen() {
               await logout();
               router.push("/");
             } else {
-              Alert.alert("Error", "Something went wrong while deleting your account.");
+              Alert.alert(
+                "Account Deletion Failed",
+                "We ran into a problem while deleting your account.\n\nPlease email us at support@amchats.org and we’ll take care of it right away."
+              );
             }
 
           }
