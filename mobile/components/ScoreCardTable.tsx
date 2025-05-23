@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Medal, ScoreCard, ScoringType } from "@/types/event";
 import { colors } from "@/constants/colors";
+import { assignMedalsAndPositions } from "@/utils/score";
 
 interface Props {
   cards: ScoreCard[];
@@ -37,45 +38,10 @@ export default function ScoreCardTable({ cards, editable, scoringType, onSave, s
   const [data, setData] = useState<ScoreCard[]>([]);
   const [sortBy, setSortBy] = useState<"score">("score");
 
-      useEffect(() => {
-        // 1) sort (ascending for time, descending otherwise)
-        const sorted = [...cards].sort((a, b) => {
-          const aScore = a.score ?? (scoringType === "time" ? Infinity : -Infinity);
-          const bScore = b.score ?? (scoringType === "time" ? Infinity : -Infinity);
-          return scoringType === "time"
-            ? aScore - bScore
-            : bScore - aScore;
-        });
-      
-        // 2) assign medals by *distinct* score, so ties share the same medal
-        const withMedals: ScoreCard[] = [];
-        let lastScore: number | null = null;
-        let rank = 0;
-      
-        for (const card of sorted) {
-          const s = card.score ?? 0;
-          // only award medals for positive scores
-          if (s > 0) {
-            // if we hit a *new* score value, bump our rank
-            if (s !== lastScore) {
-              rank += 1;
-              lastScore = s;
-            }
-          } else {
-            // non‐positive scores never get a medal
-            rank = 999;
-          }
-      
-          let medal: ScoreCard["medal"] = "none";
-          if (rank === 1) medal = "gold";
-          else if (rank === 2) medal = "silver";
-          else if (rank === 3) medal = "bronze";
-      
-          withMedals.push({ ...card, medal, position: rank,   });
-        }
-
-        setData(withMedals);
-      }, [cards, scoringType]);
+      // useEffect(() => {
+      //   const withMedals = assignMedalsAndPositions(cards, scoringType);
+      //   setData(withMedals);
+      // }, [cards, scoringType]);
 
   const renderRow = ({ item }: { item: ScoreCard }) => (
     <View style={styles.row}>
@@ -151,7 +117,7 @@ export default function ScoreCardTable({ cards, editable, scoringType, onSave, s
       </View>
 
       <FlatList
-        data={data}
+        data={cards}
         keyExtractor={item => item.childId}
         renderItem={renderRow}
         scrollEnabled={false}

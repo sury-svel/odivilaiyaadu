@@ -100,7 +100,7 @@ export default function VolunteerScreen() {
               : `Welcome, ${user.fullName}!`}
           </Text>
           
-          {volunteerUser.couponCode && (
+          {/* {volunteerUser.couponCode && (
             <View style={styles.couponContainer}>
               <Text style={styles.couponLabel}>
                 {language === "ta" ? "உங்கள் கூப்பன் குறியீடு:" : "Your Coupon Code:"}
@@ -115,16 +115,16 @@ export default function VolunteerScreen() {
                   : "Use this code to redeem food during the event."}
               </Text>
             </View>
-          )}
+          )} */}
           
-          <View style={styles.assignmentInfo}>
+          {/* <View style={styles.assignmentInfo}>
             <Info size={20} color={colors.primary} />
             <Text style={styles.assignmentInfoText}>
               {language === "ta" 
                 ? `நீங்கள் அதிகபட்சம் ${settings.maxVolunteerGames} விளையாட்டுகளுக்கு பணியமர்த்தப்படலாம்.` 
                 : `You can be assigned to a maximum of ${settings.maxVolunteerGames} games.`}
             </Text>
-          </View>
+          </View> */}
         </View>
         
         <View style={styles.section}>

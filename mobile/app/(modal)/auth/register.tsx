@@ -14,7 +14,7 @@ import { colors } from "@/constants/colors";
 import { TextInput } from "@/components/TextInput";
 import { Button } from "@/components/Button";
 import { CheckBox } from "@/components/CheckBox";
-import { Mail, Lock, User, Phone, MapPin } from "lucide-react-native";
+import { Mail, Lock, User, Phone, MapPin, EyeOff, Eye } from "lucide-react-native";
 import { useTranslation } from "@/i18n";
 import { Language } from "@/constants/languages";
 
@@ -26,11 +26,12 @@ export default function RegisterScreen() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<"parent" | "volunteer">("parent");
   const [agreedToSafety, setAgreedToSafety] = useState(false);
   const [showWaiver, setShowWaiver] = useState(false);
-  // const [useCognito, setUseCognito] = useState(false);
   const { t } = useTranslation(); // Use the custom hook to ensure re-renders
   
   const handleRegister = async () => {
@@ -53,15 +54,15 @@ export default function RegisterScreen() {
     }
 
     
-    if (!phone) {
-      Alert.alert(t("register.error.title"), t("register.error.phoneRequired"));
-      return;
-    }
+    // if (!phone) {
+    //   Alert.alert(t("register.error.title"), t("register.error.phoneRequired"));
+    //   return;
+    // }
     
-    if (!address) {
-      Alert.alert(t("register.error.title"), t("register.error.addressRequired"));
-      return;
-    }
+    // if (!address) {
+    //   Alert.alert(t("register.error.title"), t("register.error.addressRequired"));
+    //   return;
+    // }
     
     if (!password) {
       Alert.alert(t("register.error.title"), t("register.error.passwordRequired"));
@@ -130,7 +131,7 @@ export default function RegisterScreen() {
           <Text style={styles.title}>{t("register.title")}</Text>
           <Text style={styles.subtitle}>{t("register.subtitle")}</Text>
         </View>
-        
+
         <View style={styles.form}>
           <TextInput
             label={t("register.fields.fullName")}
@@ -139,7 +140,7 @@ export default function RegisterScreen() {
             onChangeText={setFullName}
             leftIcon={<User size={20} color={colors.text.secondary} />}
           />
-          
+
           <TextInput
             label={t("register.fields.email")}
             placeholder={t("register.placeholders.email")}
@@ -149,42 +150,48 @@ export default function RegisterScreen() {
             autoCapitalize="none"
             leftIcon={<Mail size={20} color={colors.text.secondary} />}
           />
-          
+
           <TextInput
-            label={t("register.fields.phone")}
+            label={`${t("register.fields.phone")} (${t("register.optional")})`}
             placeholder={t("register.placeholders.phone")}
             value={phone}
             onChangeText={setPhone}
             keyboardType="phone-pad"
             leftIcon={<Phone size={20} color={colors.text.secondary} />}
           />
-          
+
           <TextInput
-            label={t("register.fields.address")}
+            label={`${t("register.fields.address")} (${t(
+              "register.optional"
+            )})`}
             placeholder={t("register.placeholders.address")}
             value={address}
             onChangeText={setAddress}
             leftIcon={<MapPin size={20} color={colors.text.secondary} />}
           />
-          
+
           <TextInput
             label={t("register.fields.password")}
             placeholder={t("register.placeholders.password")}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={!showPassword}
+            rightIcon={showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            onRightIconPress={() => setShowPassword(!showPassword)}
             leftIcon={<Lock size={20} color={colors.text.secondary} />}
           />
-          
+
           <TextInput
             label={t("register.fields.confirmPassword")}
             placeholder={t("register.placeholders.confirmPassword")}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            secureTextEntry
+            secureTextEntry={!showConfirmPassword}
+            rightIcon={ showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />  }
+            onRightIconPress={() => setShowConfirmPassword(!showConfirmPassword)  }
             leftIcon={<Lock size={20} color={colors.text.secondary} />}
           />
-          
+
           <Text style={styles.roleLabel}>{t("register.whoAreYou")}</Text>
           <View style={styles.roleButtons}>
             <Button
@@ -200,55 +207,67 @@ export default function RegisterScreen() {
               style={styles.roleButton}
             />
           </View>
-          
-          {/* <TouchableOpacity 
-            onPress={() => setUseCognito(!useCognito)}
-            style={styles.cognitoToggle}
-            activeOpacity={0.7}
-          >
-            <View style={[styles.checkbox, useCognito && styles.checkboxChecked]}>
-              {useCognito && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-            <Text style={styles.cognitoText}>Use email authentication</Text>
-          </TouchableOpacity> */}
-          
+
           <View style={styles.waiverContainer}>
             <View style={styles.waiverHeader}>
-              <Text style={styles.waiverTitle}>{t("register.waiver.title")}</Text>
+              <Text style={styles.waiverTitle}>
+                {t("register.waiver.title")}
+              </Text>
               <TouchableOpacity onPress={toggleWaiver} activeOpacity={0.7}>
                 <Text style={styles.waiverToggle}>
-                  {showWaiver ? t("register.waiver.hide") : t("register.waiver.show")}
+                  {showWaiver
+                    ? t("register.waiver.hide")
+                    : t("register.waiver.show")}
                 </Text>
               </TouchableOpacity>
             </View>
-            
+
             {showWaiver && (
               <Text style={styles.waiverText}>
-                In consideration of being permitted to participate in AmChaTS/APS Odi Vilayaadu Kids event, I hereby waive, release and discharge any and all claims for damages for personal injury, death, or property damage which I may have, or which hereafter accrue to me, against AmChaTS and APS as a result of my participation in the event. This release is intended to discharge the organizers, volunteers, and other entities from and against any and all liability arising out of or connected in any way with my participation in the event, even though that liability may arise out of the negligence or carelessness on the part of persons or entities mentioned above. I understand that this event involves an element of risk and danger of accidents, and knowing those risks, I hereby assume those risks. I SIGN IT OF MY OWN FREE WILL.
+                In consideration of being permitted to participate in
+                AmChaTS/APS Odi Vilaiyaadu Kids event, I hereby waive, release
+                and discharge any and all claims for damages for personal
+                injury, death, or property damage which I may have, or which
+                hereafter accrue to me, against AmChaTS and APS as a result of
+                my participation in the event. This release is intended to
+                discharge the organizers, volunteers, and other entities from
+                and against any and all liability arising out of or connected in
+                any way with my participation in the event, even though that
+                liability may arise out of the negligence or carelessness on the
+                part of persons or entities mentioned above. I understand that
+                this event involves an element of risk and danger of accidents,
+                and knowing those risks, I hereby assume those risks. I SIGN IT
+                OF MY OWN FREE WILL.
               </Text>
             )}
-            
+
             <CheckBox
               label={t("register.waiver.agree")}
               checked={agreedToSafety}
               onPress={toggleSafetyAgreement}
             />
           </View>
-          
+
           <Button
             title={t("register.registerButton")}
             onPress={handleRegister}
             isLoading={isLoading}
             style={styles.registerButton}
           />
-          
-          <TouchableOpacity 
+          <Button
+            title={t("common.cancel")}
+            onPress={() => router.back()}
+            variant="outline"
+            style={{ marginTop: 12 }}
+          />
+          <TouchableOpacity
             onPress={handleLogin}
             style={styles.loginLink}
             activeOpacity={0.7}
           >
             <Text style={styles.loginText}>
-              {t("register.alreadyHaveAccount")} <Text style={styles.loginTextBold}>{t("common.login")}</Text>
+              {t("register.alreadyHaveAccount")}{" "}
+              <Text style={styles.loginTextBold}>{t("common.login")}</Text>
             </Text>
           </TouchableOpacity>
         </View>

@@ -5,26 +5,27 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
-  ActivityIndicator, 
-  Alert
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
 import { useTranslation } from "@/i18n";
 import { getUiLanguage, tr } from "@/utils/i18n";
-import { Division, Game, ScoreCard, ScoringType } from "@/types/event";
+import { Division, DivisionStatus, Game, ScoreCard, ScoringType } from "@/types/event";
 import ScoreCardTable from "./ScoreCardTable";
 import { colors } from "@/constants/colors";
-import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '@/config/supabase';
+import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "@/config/supabase";
+import { assignMedalsAndPositions } from "@/utils/score";
 
 interface Props {
   division: Division;
-  game: Game,
+  game: Game;
   editable: boolean;
-  scoringType: ScoringType; 
+  scoringType: ScoringType;
   onSave: (card: ScoreCard) => void;
   style?: ViewStyle;
-  isVolunteerAssigned: boolean;    
+  isVolunteerAssigned: boolean;
 }
 
 export default function DivisionAccordion({
@@ -33,23 +34,21 @@ export default function DivisionAccordion({
   editable,
   scoringType,
   onSave,
-  isVolunteerAssigned,  
+  isVolunteerAssigned,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [hasEnded, setHasEnded] = useState(false);
+  // const [hasStarted, setHasStarted] = useState(false);
+  // const [hasEnded, setHasEnded] = useState(false);
+  const [divisionStatus, setDivisionStatus] = useState<DivisionStatus>( division.status );
+  const [scoreCards, setScoreCards] = useState<ScoreCard[]>(  division.scoreCards ?? [] );
   const { t, i18n } = useTranslation();
   const lang = getUiLanguage(i18n);
 
-
-  const title = `${tr(division.name, lang)} (${division.minAge}–${
-    division.maxAge
-  }) • ${division.registrationCount} ${
-    division.registrationCount === 1 ? "kid" : "kids"
-  }`;
-
+  const title = `${tr(division.name, lang)} (${division.minAge}–${division.maxAge})`;
   const hasPlayers = (division.registrationCount ?? 0) > 0;
+
+  // console.log("Division ===>>>>>", division);
 
   const toggleOpen = () => {
     if (hasPlayers) {
@@ -68,7 +67,7 @@ export default function DivisionAccordion({
             template_id: templateId,
             params: {
               lang,
-              game:     tr(game.name,     lang),
+              game: tr(game.name, lang),
               division: tr(division.name, lang),
               location: tr(game.mapLocation ?? "", lang),
             },
@@ -87,19 +86,28 @@ export default function DivisionAccordion({
       setLoading(false);
     }
   }
-  
+
   // Confirm and flip to “started”
-  const handleStart = () => {
+  const handleStart = async () => {
     Alert.alert(
-      t("volunteer.startConfirmTitle"), // e.g. "Start Game?"
-      t("volunteer.startConfirmMsg"), // e.g. "Are you sure you want to start now?"
+      t("volunteer.startConfirmTitle"),
+      t("volunteer.startConfirmMsg"),
       [
         { text: t("common.cancel"), style: "cancel" },
         {
           text: t("common.start"),
-          onPress: () => {
-            setHasStarted(true);
-            notify("division_start"); //Notifications sent
+          onPress: async () => {
+            const { error } = await supabase
+              .from("game_divisions")
+              .update({ status: "started" })
+              .eq("division_id", division.id)
+              .eq("game_id", game.id);
+            if (!error) {
+              setDivisionStatus("started");
+              notify("division_start");
+            } else {
+              Alert.alert(t("common.error"), error.message);
+            }
           },
         },
       ]
@@ -107,34 +115,84 @@ export default function DivisionAccordion({
   };
 
   // Confirm and flip to “ended”
-  const handleEnd = () => {
-    Alert.alert(
-      t("volunteer.endConfirmTitle"), // e.g. "End Game?"
-      t("volunteer.endConfirmMsg"), // e.g. "Have you finished entering all scores?"
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("common.end"),
-          onPress: () => setHasEnded(true),
-        },
-      ]
-    );
+  const handleEnd = async () => {
+   Alert.alert(t("volunteer.endConfirmTitle"), t("volunteer.endConfirmMsg"), [
+     { text: t("common.cancel"), style: "cancel" },
+     {
+       text: t("common.end"),
+       onPress: async () => {
+         const { error } = await supabase
+           .from("game_divisions")
+           .update({ status: "stopped" })
+           .eq("division_id", division.id)
+           .eq("game_id", game.id);;
+         if (!error) {
+           setDivisionStatus("stopped");
+         } else {
+           Alert.alert(t("common.error"), error.message);
+         }
+       },
+     },
+   ]);
   };
 
-  const handlePublish = () => {
-    Alert.alert(
-      t("volunteer.publishConfirmTitle"),   // e.g. "Publish Results?"
-      t("volunteer.publishConfirmMsg"),     // e.g. "Are you sure you want to publish the results?"
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("common.publish"),
-          onPress: () => notify("division_publish"),
+
+const handlePublish = async () => {
+  Alert.alert(
+    t("volunteer.publishConfirmTitle"),
+    t("volunteer.publishConfirmMsg"),
+    [
+      { text: t("common.cancel"), style: "cancel" },
+      {
+        text: t("common.publish"),
+        onPress: async () => {
+          setLoading(true);
+          try {
+            const { error } = await supabase
+              .from("game_divisions")
+              .update({ status: "completed" })
+              .eq("division_id", division.id)
+              .eq("game_id", game.id);
+            if (!error) {
+              setDivisionStatus("completed");
+              await notify("division_publish");
+            } else {
+              Alert.alert(t("common.error"), error.message);
+            }
+          } finally {
+            setLoading(false);
+          }
         },
-      ]
-    );
+      },
+    ]
+  );
+};
+
+
+  const handleSaveAllScores = async () => {
+    try {
+      const updated = assignMedalsAndPositions(scoreCards, scoringType);
+
+      console.log("Saving all scoreCards:", scoreCards);
+      const updates = updated.map((u) =>
+        supabase
+          .from("game_scores")
+          .update({
+            score: u.score,
+            position: u.position,
+            medal: u.medal,
+          })
+          .eq("child_id", u.childId)
+          .eq("division_id", u.divisionId)
+          .eq("game_id", u.gameId)
+      );
+
+      await Promise.all(updates);
+      Alert.alert("Success", "Scores and results saved!");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -142,36 +200,47 @@ export default function DivisionAccordion({
         style={styles.header}
         onPress={() => setOpen((o) => !o)}
       >
-        {/* <Text style={styles.headerText}>{title}</Text> */}
-        <View style={styles.titleRow}>
-          <Text style={styles.divisionName}>{tr(division.name, lang)}</Text>
-          <Text style={styles.ageRange}>
-            ({division.minAge}–{division.maxAge})
-          </Text>
-          <View style={styles.registrationBadge}>
-            <Text style={styles.registrationText}>
-              {division.registrationCount}{" "}
-              {division.registrationCount === 1 ? "kid" : "kids"}
-            </Text>
+      <View style={styles.titleWrapper}>
+        <Text style={styles.divisionTitleText}>{title}</Text>
+
+        <View style={styles.subInfoRow}>
+          <View style={styles.iconLabel}>
+            <Ionicons name="person-outline" size={14} color={colors.text.secondary} />
+            <Text style={styles.infoText}>{division.registrationCount}</Text>
+          </View>
+
+          <View style={[styles.statusBadge, styles[divisionStatus]]}>
+            <Text style={styles.statusText}>{divisionStatus}</Text>
           </View>
         </View>
+      </View>
+
         <View style={styles.rightIcons}>
-          {hasPlayers && isVolunteerAssigned && !hasStarted && (
+          {hasPlayers && isVolunteerAssigned && divisionStatus === "scheduled" && (
             <TouchableOpacity onPress={handleStart} style={styles.actionBtn}>
               <Ionicons name="play-outline" size={20} color={colors.primary} />
             </TouchableOpacity>
           )}
-          {hasPlayers && isVolunteerAssigned && hasStarted && !hasEnded && (
-            <TouchableOpacity onPress={handleEnd} style={styles.actionBtn}>
-              <Ionicons name="stop-outline" size={20} color={colors.primary} />
-            </TouchableOpacity>
+          {hasPlayers && isVolunteerAssigned && divisionStatus === "started" && (
+            <>
+              <TouchableOpacity onPress={handleEnd} style={styles.actionBtn}>
+                <Ionicons name="stop-outline" size={20} color={colors.primary} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleSaveAllScores} style={styles.actionBtn}>
+                <Ionicons name="save-outline" size={20} color={colors.primary} />
+              </TouchableOpacity>
+            </>
           )}
-          {hasPlayers && isVolunteerAssigned && hasEnded && ( 
-            <TouchableOpacity onPress={handlePublish} disabled={loading} style={styles.actionBtn} >
+          {hasPlayers && isVolunteerAssigned && divisionStatus === "stopped" && (
+            <TouchableOpacity
+              onPress={handlePublish}
+              disabled={loading}
+              style={styles.actionBtn}
+            >
               {loading ? (
                 <ActivityIndicator color={colors.primary} />
               ) : (
-                <Ionicons name="send-outline" size={20}  color={colors.primary}  />
+                <Ionicons name="send-outline" size={20} color={colors.primary} />
               )}
             </TouchableOpacity>
           )}
@@ -181,10 +250,21 @@ export default function DivisionAccordion({
 
       {open && (
         <ScoreCardTable
-          cards={division.scoreCards ?? []}
-          editable={editable && hasStarted && !hasEnded}
+          cards={scoreCards}
+          editable={editable && divisionStatus === "started"}
           scoringType={scoringType}
-          onSave={onSave}
+          onSave={(card) => {
+            const updated = scoreCards.map((c) =>
+              c.childId === card.childId && c.gameId === card.gameId
+                ? { ...c, score: card.score }
+                : c
+            );
+            const updatedWithMedals = assignMedalsAndPositions(
+              updated,
+              scoringType
+            );
+            setScoreCards(updatedWithMedals);
+          }}
           style={{ display: open ? "flex" : "none" }}
         />
       )}
@@ -246,5 +326,64 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     marginRight: 12,
+  },
+
+  divisionTitleText: {
+  fontSize: 16,
+  fontWeight: "600",
+  flex: 1,
+  color: colors.text.primary,
+  },
+
+  rightInfoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  iconLabel: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+
+  infoText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+
+  statusBadge: {
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+
+  statusText: {
+    fontSize: 12,
+    color: "white",
+    textTransform: "capitalize",
+  },
+
+  scheduled: {
+    backgroundColor: colors.status.scheduled,
+  },
+  started: {
+    backgroundColor: colors.status.live,
+  },
+  stopped: {
+    backgroundColor: colors.status.stopped,
+  },
+  completed: {
+    backgroundColor: colors.status.completed,
+  },
+  titleWrapper: {
+    flex: 1,
+  },
+
+  subInfoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    gap: 10,
   },
 });

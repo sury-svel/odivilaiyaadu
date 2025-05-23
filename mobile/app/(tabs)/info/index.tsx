@@ -54,12 +54,12 @@ export default function InfoScreen() {
               variant="outline"
               style={styles.cardButton}
             />
-            <Button 
+            {/* <Button 
               title={language === "ta" ? "நன்கொடை" : "Donate"}
               onPress={() => {}}
               icon={<Heart size={16} color="white" />}
               style={styles.cardButton}
-            />
+            /> */}
           </View>
         </View>
         
@@ -90,12 +90,12 @@ export default function InfoScreen() {
               variant="outline"
               style={styles.cardButton}
             />
-            <Button 
+            {/* <Button 
               title={language === "ta" ? "பதிவு செய்க" : "Register"}
               onPress={() => {}}
               icon={<School size={16} color="white" />}
               style={styles.cardButton}
-            />
+            /> */}
           </View>
         </View>
         

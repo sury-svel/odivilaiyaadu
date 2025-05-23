@@ -13,6 +13,7 @@ interface ChildrenState {
 
   // Actions
   fetchChildren: () => Promise<void>;
+  refetchChildById: (childId: string) => Promise<void>;
   addChild: (
     childData: Omit<Child, "id" | "scores" | "registeredGames">
   ) => Promise<boolean>;
@@ -55,7 +56,7 @@ function mapChildToDB(child: Partial<Child>) {
 export const useChildrenStore = create<ChildrenState>()(
   persist(
     (set, get) => ({
-      children: mockChildren,
+      children: [],
       isLoading: false,
 
       fetchChildren: async () => {
@@ -148,6 +149,67 @@ export const useChildrenStore = create<ChildrenState>()(
         }
       },
 
+      refetchChildById: async (childId: string): Promise<void> => {
+        set({ isLoading: true });
+
+        try {
+          // 1) fetch the child
+          const { data: childRow, error: childErr } = await supabase
+            .from("children")
+            .select("*")
+            .eq("id", childId)
+            .single();
+
+          if (childErr) throw childErr;
+
+          const mappedChild = mapChildFromDB(childRow);
+
+          // 2) fetch registered games for that child
+          const { data: regs, error: regsErr } = await supabase
+            .from("event_game_registration")
+            .select("child_id, game_id")
+            .eq("child_id", childId);
+
+          if (regsErr) throw regsErr;
+
+          const registeredGames = regs.map((r) => r.game_id);
+
+          // 3) fetch scores
+          const { data: scoreRows, error: scoresErr } = await supabase
+            .from("game_scores")
+            .select("game_id, score, position, medal")
+            .eq("child_id", childId);
+
+          if (scoresErr) throw scoresErr;
+
+          const results = scoreRows.map((r) => ({
+            gameId: r.game_id,
+            score: r.score,
+            position: r.position ?? undefined,
+            medal: r.medal as Child["results"][number]["medal"],
+          }));
+
+          // 4) update the store with new child info
+          const updatedChild: Child = {
+            ...mappedChild,
+            registeredGames,
+            results,
+          };
+
+          set((state) => ({
+            children: state.children.map((c) =>
+              c.id === childId ? updatedChild : c
+            ),
+            isLoading: false,
+          }));
+        } catch (error) {
+          console.error("Error refetching child by ID:", error);
+          set({ isLoading: false });
+          throw error;
+        }
+      },
+
+
       addChild: async (
         childData: Omit<Child, "id" | "scores" | "registeredGames">
       ): Promise<boolean> => {
@@ -192,7 +254,7 @@ export const useChildrenStore = create<ChildrenState>()(
           const newChild: Child = {
             ...childRow,
             registeredGames: [],
-            scores: [],
+            results: [],
           };
       
           set({ children: [...get().children, newChild], isLoading: false });
@@ -203,8 +265,32 @@ export const useChildrenStore = create<ChildrenState>()(
           return false;
         }
       },
-      
-      
+      updateChild: async (childId, childData) => {
+        set({ isLoading: true });
+
+        try {
+          const updatedChildren = get().children.map((child) =>
+            child.id === childId ? { ...child, ...childData } : child
+          );
+
+          set({ children: updatedChildren, isLoading: false });
+          return true;
+        } catch (error) {
+          console.error("Error updating child:", error);
+          set({ isLoading: false });
+          return false;
+        }
+      },
+    }),
+    {
+      name: "children-storage",
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
+
+
+
       // addChild: async (childData) => {
       //   set({ isLoading: true });
       //   try {
@@ -287,27 +373,3 @@ export const useChildrenStore = create<ChildrenState>()(
       //     return false;
       //   }
       // },
-
-      updateChild: async (childId, childData) => {
-        set({ isLoading: true });
-
-        try {
-          const updatedChildren = get().children.map((child) =>
-            child.id === childId ? { ...child, ...childData } : child
-          );
-
-          set({ children: updatedChildren, isLoading: false });
-          return true;
-        } catch (error) {
-          console.error("Error updating child:", error);
-          set({ isLoading: false });
-          return false;
-        }
-      },
-    }),
-    {
-      name: "children-storage",
-      storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
-);

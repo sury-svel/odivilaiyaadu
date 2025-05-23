@@ -15,7 +15,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { colors } from "@/constants/colors";
 import { TextInput } from "@/components/TextInput";
 import { Button } from "@/components/Button";
-import { Mail, Lock, User } from "lucide-react-native";
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react-native";
 import { useTranslation } from "@/i18n";
 import { registerForPushNotificationsAsync } from '@/utils/notification';
 import { supabase } from "@/config/supabase";
@@ -25,6 +25,7 @@ export default function LoginScreen() {
   const { login, isLoading, error, clearError, registerPushToken } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
   const [processingNotif, setProcessingNotif] = useState(false);
   const { t } = useTranslation(); // Use the custom hook to ensure re-renders
@@ -103,9 +104,6 @@ export default function LoginScreen() {
     }
   };
 
-
-
-
   const handleRegister = () => {
     router.push("/(modal)/auth/register");
   };
@@ -134,7 +132,9 @@ export default function LoginScreen() {
             placeholder={t("login.passwordPlaceholder")}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={!showPassword}
+            rightIcon={showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            onRightIconPress={() => setShowPassword(!showPassword)}
             leftIcon={<Lock size={20} color={colors.text.secondary} />}
           />
 
@@ -146,7 +146,12 @@ export default function LoginScreen() {
             isLoading={isLoading}
             style={styles.loginButton}
           />
-
+        <Button
+          title={t("common.cancel")}
+          onPress={() => router.back()}
+          variant="outline"
+          style={{ marginTop: 12 }}
+        />
 
           <Modal
             visible={showNotifPrompt}

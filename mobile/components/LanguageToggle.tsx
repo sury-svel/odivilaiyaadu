@@ -17,40 +17,16 @@ export const LanguageToggle = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[
-          styles.button,
-          language === 'en' ? styles.activeButton : styles.inactiveButton,
-        ]}
-        onPress={() => handleLanguageChange('en')}
+        style={styles.toggleWrapper}
+        onPress={() => handleLanguageChange(language === "en" ? "ta" : "en")}
         activeOpacity={0.7}
       >
-        <Text
-          style={[
-            styles.buttonText,
-            language === 'en' ? styles.activeText : styles.inactiveText,
-          ]}
-        >
-          EN
+        <Text style={styles.iconLabel}>
+          {language === "en" ? '🇮🇳 தமிழ்' : '🇺🇸 EN'}
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[
-          styles.button,
-          language === 'ta' ? styles.activeButton : styles.inactiveButton,
-        ]}
-        onPress={() => handleLanguageChange('ta')}
-        activeOpacity={0.7}
-      >
-        <Text
-          style={[
-            styles.buttonText,
-            language === 'ta' ? styles.activeText : styles.inactiveText,
-          ]}
-        >
-          தமிழ்
-        </Text>
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -85,4 +61,17 @@ const styles = StyleSheet.create({
   inactiveText: {
     color: colors.text.secondary,
   },
+  toggleWrapper: {
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  borderRadius: 20,
+  
+  },
+
+  iconLabel: {
+    color: colors.text.primary,
+    fontWeight: '600',
+    fontSize: 14,
+  },
+
 });

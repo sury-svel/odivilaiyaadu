@@ -1,5 +1,6 @@
 export type EventStatus = "active" | "upcoming" | "past";
 export type GameStatus = "scheduled" | "live" | "completed";
+export type DivisionStatus = "scheduled" | "started" | "stopped" | "completed";
 export type Medal = "gold" | "silver" | "bronze" | "none";
 export type ScoringType =  "points"|"time"|"distance";
 
@@ -54,6 +55,7 @@ export interface Game {
 export interface ScoreCard {
   childId: string;
   divisionId: string;
+  gameId: string;  
   name: string;
   age: number;
   score: number | null;
@@ -67,6 +69,7 @@ export interface Division {
   minAge: number;
   maxAge: number;
   registrationCount: number;
+  status: DivisionStatus;
   scoreCards: ScoreCard[];
 }
 

@@ -33,6 +33,7 @@ export default function GameDetailsScreen() {
   const lang = getUiLanguage(i18n);
 
   const currentGame = useEventsStore((s) => s.currentGame);
+  const currentEvent = useEventsStore((s) => s.currentEvent);
   const fetchGameDetails = useEventsStore((s) => s.fetchGameDetails);
   const saveScore = useEventsStore((s) => s.saveScore);
   const assignVolunteerToGame  = useEventsStore(s => s.assignVolunteerToGame);
@@ -41,6 +42,8 @@ export default function GameDetailsScreen() {
   const isVolunteer = user?.role === "volunteer";
   const isParent = user?.role === "parent";
   const [processing, setProcessing] = useState(false);
+  const [mapModalVisible, setMapModalVisible] = useState(false);
+  
   
   useEffect(() => {
     if (gameId) fetchGameDetails(gameId);
@@ -72,7 +75,9 @@ export default function GameDetailsScreen() {
     setProcessing(false);
   };
   
-  
+  const mapImageUrl = currentGame.mapLocation
+  ? `https://odi-vilayaadu-public-assets.s3.us-east-2.amazonaws.com/events/CT/ovct2025_fm_${currentGame.mapLocation}.png`
+  : `https://odi-vilayaadu-public-assets.s3.us-east-2.amazonaws.com/events/CT/ovct2025_fm.png`;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,11 +97,21 @@ export default function GameDetailsScreen() {
                 </Text>
               </View>
             </View>
-
+            {/* 
             <View style={styles.infoRow}>
               <MapPin size={16} color={colors.text.secondary} />
               <View style={styles.infoContent}>
                 <Text style={styles.infoLabel}>{currentGame.mapLocation}</Text>
+              </View>
+            </View> */}
+            <View style={styles.infoRow}>
+              <MapPin size={16} color={colors.text.secondary} />
+              <View style={styles.infoContent}>
+                <TouchableOpacity onPress={() => setMapModalVisible(true)}>
+                  <Text style={[styles.infoLabel,{ textDecorationLine: "underline" }, ]} >
+                    {currentGame.mapLocation}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -153,9 +168,29 @@ export default function GameDetailsScreen() {
               {tr(currentGame.rules, getUiLanguage(i18n))}
             </Text>
           </View>
-
         </View>
       </ScrollView>
+      <Modal
+        visible={mapModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMapModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPressOut={() => setMapModalVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location Map</Text>
+            <Image
+              source={{ uri: mapImageUrl }}
+              style={{ width: "100%", height: 300 }}
+              resizeMode="contain"
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }

@@ -7,7 +7,10 @@ import {
   Image, 
   SafeAreaView,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal,
+  Linking, 
+  Platform
 } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { useAuthStore } from "@/store/auth-store";
@@ -29,6 +32,7 @@ export default function EventDetailsScreen() {
   const { user, language, isAuthenticated } = useAuthStore();
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [mapModalVisible, setMapModalVisible] = useState(false);
 
   const { 
     events: eventsDict, 
@@ -40,6 +44,8 @@ export default function EventDetailsScreen() {
     refreshEvent,
   } = useEventsStore();
   
+    const mapImageUrl = currentEvent?.fieldMapUrl ?? `https://odi-vilayaadu-public-assets.s3.us-east-2.amazonaws.com/events/CT/ovct2025_fm.png`;
+
     /* -------------------------------------------------- */
   /* 1. make sure the store has the current event and isRegistered set  */
   /* -------------------------------------------------- */
@@ -108,6 +114,7 @@ export default function EventDetailsScreen() {
   const name        = tr(event.name,        lang);
   const description = tr(event.description, lang);
   const location = tr(event.address, lang);
+  const isParent = user?.role === "parent";
   
   
   const handleRegister = async () => {
@@ -150,6 +157,7 @@ export default function EventDetailsScreen() {
         if (success) {
           await refreshEvent(event.id); // <-- optional but ensures refresh is done
           setCurrentEvent(event.id); // <-- forces update in store
+          setIsRegistered(true);
           Alert.alert(
             language === "ta" ? "பதிவு வெற்றி" : "Registration Successful",
             language === "ta"
@@ -198,7 +206,36 @@ export default function EventDetailsScreen() {
                 <Text style={styles.infoLabel}>
                   {language === "ta" ? "இடம்" : "Location"}
                 </Text>
-                <Text style={styles.infoText}>{location}</Text>
+                {/* <Text style={styles.infoText}>{location}</Text> */}
+                   <TouchableOpacity
+                      onPress={() => {
+                        const query = encodeURIComponent(location);
+                        // Use native maps if possible, fallback to Google Maps web
+                        const url =
+                          Platform.OS === "ios"
+                            ? `maps:0,0?q=${query}`                  // Apple Maps
+                            : `geo:0,0?q=${query}`                   // Android Geo URI
+                        // If that fails for any reason, open Google Maps in browser:
+                        Linking.openURL(url).catch(() =>
+                          Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`)
+                        );
+                      }}
+                    >
+                      <Text style={[styles.infoText, styles.linkText]}>
+                        {location}
+                      </Text>
+                    </TouchableOpacity>
+              </View>
+            </View>
+            
+            <View style={styles.infoRow}>
+              <MapPin size={16} color={colors.text.secondary} />
+              <View style={styles.infoContent}>
+                <TouchableOpacity onPress={() => setMapModalVisible(true)}>
+                  <Text style={[styles.infoLabel,{ textDecorationLine: "underline" }, ]} >
+                    {language === "ta" ? "இடத்தின் வரைபடம்" : "Location Map"}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -224,7 +261,7 @@ export default function EventDetailsScreen() {
                   <Text style={styles.infoLabel}> {language === "ta" ? "பதிவு செய்தவர்கள்" : "Registered"}   </Text>
                   <Text style={styles.infoText}>
                     {event.registeredCount || 0}{" "}
-                    {language === "ta" ? "விளையாட்டு வீரர்கள்" : "players"}
+                    {language === "ta" ? "பங்கேற்பாளர்கள்" : "players"}
                   </Text>
                 </View>
               </View>
@@ -260,7 +297,7 @@ export default function EventDetailsScreen() {
             )}
           </View>
 
-          {!isPastEvent && (
+          {!isPastEvent && isParent && (
             <View style={styles.registrationSection}>
               {isRegistered ? (
                 <Text style={styles.alreadyRegisteredText}>
@@ -290,6 +327,27 @@ export default function EventDetailsScreen() {
 
         </View>
       </ScrollView>
+      <Modal
+        visible={mapModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMapModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPressOut={() => setMapModalVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location Map</Text>
+            <Image
+              source={{ uri: mapImageUrl }}
+              style={{ width: "100%", height: 300 }}
+              resizeMode="contain"
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -391,6 +449,31 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginBottom: 16,
     textAlign: "center",
+  },
+    modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  modalContent: {
+    backgroundColor: colors.background,
+    borderRadius: 12,
+    width: "100%",
+    maxHeight: "80%",
+    padding: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: colors.text.primary,
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  linkText: {
+    color: colors.primary,
+    textDecorationLine: "underline",
   },
 });
 

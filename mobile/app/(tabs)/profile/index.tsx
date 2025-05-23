@@ -28,6 +28,7 @@ import {
   Shield
 } from "lucide-react-native";
 import { useTranslation } from "@/i18n";
+import { supabase } from "@/config/supabase";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -79,27 +80,39 @@ export default function ProfileScreen() {
     );
   };
   
-  // const handleDeleteAccount = () => {
-  //   Alert.alert(
-  //     t("profile.delete.confirmTitle"),
-  //     t("profile.delete.confirmMessage"),
-  //     [
-  //       {
-  //         text: t("common.cancel"),
-  //         style: "cancel"
-  //       },
-  //       {
-  //         text: t("common.delete"),
-  //         style: "destructive",
-  //         onPress: async () => {
-  //           // Delete account logic would go here
-  //           await logout();
-  //           router.push("/");
-  //         }
-  //       }
-  //     ]
-  //   );
-  // };
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      t("profile.delete.confirmTitle"),
+      t("profile.delete.confirmMessage"),
+      [
+        {
+          text: t("common.cancel"),
+          style: "cancel"
+        },
+        {
+          text: t("common.delete"),
+          style: "destructive",
+          onPress: async () => {
+            const { error, data } = await supabase.functions.invoke(
+              "delete_account",
+              {
+                body: JSON.stringify({ user_id: user?.id }),
+              }
+            );
+
+
+            if (!error) {
+              await logout();
+              router.push("/");
+            } else {
+              Alert.alert("Error", "Something went wrong while deleting your account.");
+            }
+
+          }
+        }
+      ]
+    );
+  };
   
   const handleEditProfile = () => {
     // Navigate to edit profile screen TBD
@@ -233,7 +246,7 @@ export default function ProfileScreen() {
             <ChevronRight size={20} color={colors.text.tertiary} />
           </TouchableOpacity>
 
-          {/* <TouchableOpacity 
+          <TouchableOpacity 
             style={styles.dangerItem}
             onPress={handleDeleteAccount}
           >
@@ -244,7 +257,7 @@ export default function ProfileScreen() {
               </Text>
             </View>
             <ChevronRight size={20} color={colors.error} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

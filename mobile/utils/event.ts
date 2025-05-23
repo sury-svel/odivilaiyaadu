@@ -7,6 +7,7 @@ import {
   EventStatus,
   LocalizedText,
   GameStatus,
+  DivisionStatus,
 } from "@/types/event"; // path to the object model
 
 // ---------- Utility helpers ----------
@@ -53,10 +54,13 @@ export const mapGame = (row: any): Game => {
 
   /* ----- map divisions array, if present ----- */
   const divisions: Division[] = (row.divisions ?? []).map((d: any) => ({
-    /* your Division interface has only name / minAge / maxAge */
-    name:   buildLT(d.name, d.translations, "name"),
-    minAge: String(d.min_age ?? ""),          // cast to string to match type
+    id: d.id,
+    name: buildLT(d.name, d.translations, "name"),
+    minAge: String(d.min_age ?? ""),
     maxAge: String(d.max_age ?? ""),
+    status: d.status as DivisionStatus,
+    registrationCount: d.registration_count ?? 0,
+    scoreCards: [],
   }));
 
   return {
@@ -143,10 +147,12 @@ export const mapGameDetail = (row: any): Game => {
       name: buildLT(d.name, d.translations, "name"),
       minAge: d.min_age,
       maxAge: d.max_age,
+      status: d.status as DivisionStatus,
       registrationCount: d.registration_count,
       scoreCards: (d.score_cards ?? []).map((s: any) => ({
         childId: s.child_id,
         divisionId:  s.division_id, 
+        gameId: s.game_id,
         name: s.name,
         age: s.age,
         score: s.score,

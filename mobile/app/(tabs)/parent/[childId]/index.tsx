@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
   StyleSheet, 
   Text, 
@@ -7,8 +7,10 @@ import {
   SafeAreaView,
   Alert,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { useAuthStore } from "@/store/auth-store";
 import { useChildrenStore } from "@/store/children-store";
@@ -25,16 +27,46 @@ export default function ChildDetailScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const { user } = useAuthStore();
-  const { children, isLoading} = useChildrenStore();
+  const { children, isLoading, refetchChildById} = useChildrenStore();
+  const [refreshing, setRefreshing] = useState(false);
   const { games } = useEventsStore();
   const { t, language } = useTranslation();
-  
   const [activeTab, setActiveTab] = useState<"games" | "results">("games");
-  
-  const child = children.find(c => c.id === childId);
-  //console.log('🔍 child object:', child);
 
-  if (isLoading) return <ActivityIndicator />;
+    // refresh function
+  const refreshChild = React.useCallback(async () => {
+    if (!childId) return;
+    try {
+      setRefreshing(true);
+      await refetchChildById(childId);
+    } catch {
+      Alert.alert("Error", "Failed to refresh child data.");
+    } finally {
+      setRefreshing(false);
+    }
+  }, [childId, refetchChildById]);
+
+//   useEffect(() => {
+//   useChildrenStore.persist.clearStorage();
+//   useChildrenStore.getState().fetchChildren();
+// }, []);
+
+  // auto-refresh on focus
+  useFocusEffect(
+    React.useCallback(() => {
+      refreshChild();
+    }, [refreshChild])
+  );
+  
+    // ─── 2) EARLY RENDERING DECISIONS ─────────────────────────
+  if (isLoading) {
+    return <ActivityIndicator style={{ flex: 1 }} />;
+  }
+
+  const child = children.find(c => c.id === childId);
+  // console.log('Child ID ' , childId);
+  // console.log('Name : ', child?.name);
+  // console.log('>>> child object:', child);
 
   if (!child) {
     return (
@@ -62,10 +94,7 @@ export default function ChildDetailScreen() {
       }
       return acc;
     },
-    { gold: 0, silver: 0, bronze: 0 } as Record<
-      "gold" | "silver" | "bronze",
-      number
-    >
+    { gold: 0, silver: 0, bronze: 0 } as Record<"gold" | "silver" | "bronze",  number >
   );
 
     // 1) Grab an array of all games from your dict
@@ -95,9 +124,33 @@ export default function ChildDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ title: t("children.childDetails") }} />
+      <Stack.Screen
+        options={{
+          // headerShown: true,
+          title: t("children.childDetails"),
+          // headerRight: () =>
+          //   refreshing ? (
+          //     <ActivityIndicator color={colors.primary} />
+          //   ) : (
+          //     <TouchableOpacity onPress={refreshChild}>
+          //       <Text style={{ color: colors.primary, marginRight: 10 }}>
+          //         ⟳
+          //       </Text>
+          //     </TouchableOpacity>
+          //   ),
+        }}
+      />
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent}
+             refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refreshChild}
+            colors={[colors.primary]}          // Android spinner color
+            tintColor={colors.primary}        // iOS spinner color
+          />
+        }
+      >
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Text style={styles.childName}>{child.name}</Text>
@@ -141,17 +194,8 @@ export default function ChildDetailScreen() {
             <Text style={styles.infoLabel}>
               {t("children.fields.tamilSchool")}:
             </Text>
-            <Text style={styles.infoValue}>
-              {child.tamilSchool || "N/A"}
-            </Text>
+            <Text style={styles.infoValue}>{child.tamilSchool || "N/A"}</Text>
           </View>
-
-          {/* <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>
-              {t("children.fields.tamilGrade")}:
-            </Text>
-            <Text style={styles.infoValue}>{child.tamilGrade || "N/A"}</Text>
-          </View> */}
 
           {child.medicalInfo && (
             <View style={styles.infoRow}>

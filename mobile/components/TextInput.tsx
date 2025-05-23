@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInputProps as RNTextInputProps,
   ViewStyle,
+  TouchableOpacity,
 } from "react-native";
 import { colors } from "@/constants/colors";
 
@@ -15,6 +16,7 @@ interface TextInputProps extends RNTextInputProps {
   containerStyle?: ViewStyle;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  onRightIconPress?: () => void;
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -23,11 +25,13 @@ export const TextInput: React.FC<TextInputProps> = ({
   containerStyle,
   leftIcon,
   rightIcon,
+  onRightIconPress,
   ...rest
 }) => {
   // Ensure value is never undefined (which causes the controlled/uncontrolled warning)
   const inputValue = rest.value === undefined ? "" : rest.value;
   
+
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -50,7 +54,13 @@ export const TextInput: React.FC<TextInputProps> = ({
           value={inputValue}
         />
         
-        {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
+        {rightIcon && (
+          <View style={styles.rightIcon}>
+            <TouchableOpacity onPress={onRightIconPress}>
+              {rightIcon}
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       
       {error && <Text style={styles.errorText}>{error}</Text>}

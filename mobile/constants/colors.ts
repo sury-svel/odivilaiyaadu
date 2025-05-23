@@ -15,6 +15,12 @@ export const colors = {
   warning: "#FF9800",
   info: "#2196F3",
   danger: "#F44336", // Added danger color (same as error for consistency)
+  status: {
+    scheduled: "#FFC107",   // Amber (warning) → scheduled
+    live: "#2196F3",        // Blue (info) → started / live
+    stopped: "#9E9E9E",     // Grey → stopped (inactive)
+    completed: "#4CAF50",   // Green (success) → completed
+  }
 };
 
 export const darkColors = {
@@ -34,4 +40,10 @@ export const darkColors = {
   warning: "#FFA726",
   info: "#42A5F5",
   danger: "#EF5350", // Added danger color (same as error for consistency)
+  status: {
+    scheduled: "#FFC107",   // Amber (warning) → scheduled
+    live: "#2196F3",        // Blue (info) → started / live
+    stopped: "#9E9E9E",     // Grey → stopped (inactive)
+    completed: "#4CAF50",   // Green (success) → completed
+  }
 };
