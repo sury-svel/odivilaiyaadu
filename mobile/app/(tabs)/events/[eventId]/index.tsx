@@ -323,6 +323,59 @@ export default function EventDetailsScreen() {
               )}
             </View>
           )}
+          {((event.sponsors?.length ?? 0) > 0 || (event.associates?.length ?? 0) > 0) && (
+            <View style={styles.sponsorSection}>
+              {(event.sponsors?.length ?? 0) > 0 && (
+                <View style={styles.sponsorBlock}>
+                  <Text style={styles.sectionTitle}>
+                    {language === "ta" ? "ஆதரவாளர்கள்" : "Sponsors"}
+                  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {event.sponsors?.map((sponsor, index) => (
+                      <TouchableOpacity
+                        key={`sponsor-${index}`}
+                        onPress={() => sponsor.websiteUrl && Linking.openURL(sponsor.websiteUrl)}
+                        activeOpacity={0.8}
+                        style={styles.logoCard}
+                      >
+                        <Image source={{ uri: sponsor.logoUrl }} style={styles.logoImage} />
+                        <Text style={styles.logoText}>
+                          {typeof sponsor.name === "string"
+                            ? sponsor.name
+                            : sponsor.name[lang] || sponsor.name.en}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+        {(event.associates?.length ?? 0)> 0 && (
+          <View style={styles.sponsorBlock}>
+            <Text style={styles.sectionTitle}>
+              {language === "ta" ? "இணைபங்காளிகள்" : "Associates"}
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {event.associates?.map((associate, index) => (
+                <TouchableOpacity
+                  key={`associate-${index}`}
+                  onPress={() => associate.websiteUrl && Linking.openURL(associate.websiteUrl)}
+                  activeOpacity={0.8}
+                  style={styles.logoCard}
+                >
+                  <Image source={{ uri: associate.logoUrl }} style={styles.logoImage} />
+                  <Text style={styles.logoText}>
+                    {typeof associate.name === "string"
+                      ? associate.name
+                      : associate.name[lang] || associate.name.en}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+      </View>
+    )}
 
 
         </View>
@@ -475,6 +528,35 @@ const styles = StyleSheet.create({
     color: colors.primary,
     textDecorationLine: "underline",
   },
+  sponsorSection: {
+  marginTop: 32,
+},
+
+sponsorBlock: {
+  marginBottom: 24,
+},
+
+logoCard: {
+  width: 100,
+  marginRight: 16,
+  alignItems: "center",
+},
+
+logoImage: {
+  width: 80,
+  height: 80,
+  resizeMode: "contain",
+  borderRadius: 8,
+  backgroundColor: "#F2F2F2",
+  marginBottom: 8,
+},
+
+logoText: {
+  fontSize: 12,
+  textAlign: "center",
+  color: colors.text.secondary,
+},
+
 });
 
  /*   

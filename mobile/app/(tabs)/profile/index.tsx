@@ -99,11 +99,16 @@ export default function ProfileScreen() {
                 body: JSON.stringify({ user_id: user?.id }),
               }
             );
-
-
             if (!error) {
-              await logout();
-              router.push("/");
+              Alert.alert(
+                "Account Deleted",
+                "Your account has been successfully removed. Thank you for being part of the community!"
+              );              
+              // Add short delay to allow reading the message
+              setTimeout(async () => {
+                await logout();
+                router.push("/");
+              }, 1500);
             } else {
               Alert.alert(
                 "Account Deletion Failed",
