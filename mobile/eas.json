@@ -3,9 +3,6 @@
     "version": ">= 16.4.0",
     "appVersionSource": "remote"
   },
-  "hooks": {
-      "pre-install": "bash eas-build/pre-install.sh"
-  },
   "build": {
     "development": {
       "developmentClient": true,
@@ -21,10 +18,7 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "autoIncrement": true,
-      "env": {
-        "GOOGLE_SERVICES_JSON_BASE64": "$GOOGLE_SERVICES_JSON_BASE64"
-      }
+      "autoIncrement": true
     },
     "testing": {
       "android": {
