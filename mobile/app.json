@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "org.odivilaiyaadu",
-      "buildNumber": "4",
+      "buildNumber": "6",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleURLTypes": [
@@ -29,11 +29,13 @@
       }
     },
     "android": {
+      "package": "org.odivilaiyaadu",
+      "autoIncrement": true,
+      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo4.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "org.odivilaiyaadu",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -49,8 +51,7 @@
             "DEFAULT"
           ]
         }
-      ],
-      "googleServicesFile": "./credentials/google-services.json"
+      ]
     },
     "plugins": [
       "expo-router",

@@ -14,8 +14,6 @@
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.3.0",
-    "@react-native-firebase/app": "^22.2.0",
-    "@react-native-firebase/messaging": "^22.2.0",
     "@supabase/supabase-js": "^2.49.4",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
@@ -49,9 +47,9 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@expo/ngrok": "^4.1.0",
+    "@react-native-community/cli": "latest",
     "@types/react": "~19.0.10",
-    "typescript": "~5.8.3",
-    "@react-native-community/cli": "latest"
+    "typescript": "~5.8.3"
   },
   "expo": {
     "doctor": {
