@@ -15,7 +15,6 @@
     },
     "production": {
       "channel": "production",
-      "projectRoot": "./mobile",
       "android": {
         "buildType": "app-bundle"
       },
