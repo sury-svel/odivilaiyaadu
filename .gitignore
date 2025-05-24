@@ -42,6 +42,5 @@ credentials/
 .vscode/
 .idea/
 
-# Firebase config
-**/google-services.json
+
 
