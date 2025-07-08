@@ -187,28 +187,48 @@ export const useEventsStore = create<EventsState>()(
         position,
         medal,
       }) => {
+        const eventId = get().games[gameId]?.eventId;
+      
+        if (!eventId) {
+          console.error("Missing eventId for game:", gameId);
+          return false;
+        }
+      
+        // ✅ Step 2: Log the values going into Supabase
+        console.log("Saving score with payload:", {
+          event_id: eventId,
+          game_id: gameId,
+          division_id: divisionId,
+          child_id: childId,
+          score,
+          position,
+          medal,
+        });
+      
+        // ✅ Step 1: Fix event_id and use clean data
         const { error } = await supabase.from("game_scores").upsert(
           {
-            event_id: get().events[gameId],
+            event_id: eventId,
             game_id: gameId,
             division_id: divisionId,
             child_id: childId,
-            score,
+            score: Number(score), // make sure it’s numeric
             position,
             medal,
             updated_at: new Date().toISOString(),
           },
           { onConflict: "game_id,division_id,child_id" }
         );
+      
         if (error) {
           console.error("Error saving score:", error);
           return false;
         }
-        // refresh our detail so UI updates:
+      
         await get().fetchGameDetails(gameId);
         return true;
       },
-
+      
       isUserRegisteredForEvent: async (
         eventId: string,
         userId: string
