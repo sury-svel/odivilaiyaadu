@@ -194,7 +194,7 @@ export const useEventsStore = create<EventsState>()(
           return false;
         }
       
-        // ✅ Step 2: Log the values going into Supabase
+        
         console.log("Saving score with payload:", {
           event_id: eventId,
           game_id: gameId,
@@ -205,7 +205,7 @@ export const useEventsStore = create<EventsState>()(
           medal,
         });
       
-        // ✅ Step 1: Fix event_id and use clean data
+        
         const { error } = await supabase.from("game_scores").upsert(
           {
             event_id: eventId,
