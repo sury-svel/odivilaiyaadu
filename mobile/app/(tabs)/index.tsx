@@ -16,7 +16,13 @@ import { EventCard } from "@/components/EventCard";
 import { Button } from "@/components/Button";
 import { ArrowRight } from "lucide-react-native";
 import { useTranslation } from "@/i18n";
-import { supabase } from "@/config/supabase";
+
+// Define EventStatus enum here
+enum EventStatus {
+  Active = "active",
+  Upcoming = "upcoming",
+  Past = "past",
+}
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -24,23 +30,40 @@ export default function HomeScreen() {
   const { events: eventsDict, fetchEvents } = useEventsStore();
   const [logoLoaded, setLogoLoaded] = useState(true);
   const { t } = useTranslation();
-  
-    /* convert Record → Event[] */
-  const events = React.useMemo(    () => Object.values(eventsDict),    [eventsDict]  );
 
-  useEffect(() => {    fetchEvents();  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
-  const activeEvents = events.filter(event => event.status === "active");
-  const upcomingEvents = events.filter(event => event.status === "upcoming");
-  
+  const events = React.useMemo(() => Object.values(eventsDict), [eventsDict]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const now = new Date();
+
+  const adjustedEvents = React.useMemo(() => {
+    return events.map(event => {
+      const eventDate = new Date(event.date);
+      if (eventDate < now) {
+        return { 
+          ...event, 
+          date: now.toISOString(), 
+          status: EventStatus.Active,
+        };
+      }
+      return event;
+    });
+  }, [events, now]);
+
+  const activeEvents = adjustedEvents.filter(event => event.status === EventStatus.Active);
+  const upcomingEvents = adjustedEvents.filter(event => event.status === EventStatus.Upcoming);
+
   const handleLoginPress = () => {
     router.push("/(modal)/auth/login");
   };
-  
+
   const handleRegisterPress = () => {
     router.push("/(modal)/auth/register");
   };
-  
+
   const handleViewAllEvents = () => {
     router.push("/events");
   };
@@ -49,9 +72,6 @@ export default function HomeScreen() {
     router.push(`/events/${eventId}`);
   };
 
-  // console.log("Is user authenticated? " + isAuthenticated);
-  // console.log("User role ? " + user?.role )
-  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="always">
@@ -66,7 +86,7 @@ export default function HomeScreen() {
               style={styles.logo}
             />
           </View>
-          
+
           {logoLoaded ? (
             <Image
               source={{ uri: "https://odi-vilayaadu-public-assets.s3.us-east-2.amazonaws.com/logos/odivilayaadu1.png" }}
@@ -85,7 +105,7 @@ export default function HomeScreen() {
             </>
           )}
         </View>
-        
+
         {!isAuthenticated && (
           <View style={styles.authContainer}>
             <Text style={styles.authText}>
@@ -106,7 +126,7 @@ export default function HomeScreen() {
             </View>
           </View>
         )}
-        
+
         {isAuthenticated && (
           <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeText}>
@@ -117,29 +137,29 @@ export default function HomeScreen() {
             </Text>
           </View>
         )}
-        
+
         {activeEvents.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
               {t("events.current")}
             </Text>
             {activeEvents.map(event => (
-              <EventCard key={event.id} event={event} compact={false}  onPress={() => handleEventPress(event.id)}/>
+              <EventCard key={event.id} event={event} compact={false} onPress={() => handleEventPress(event.id)} />
             ))}
           </View>
         )}
-        
+
         {upcomingEvents.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
               {t("events.upcoming")}
             </Text>
             {upcomingEvents.slice(0, 2).map(event => (
-              <EventCard key={event.id} event={event} compact={false}  onPress={() => handleEventPress(event.id)}/>
+              <EventCard key={event.id} event={event} compact={false} onPress={() => handleEventPress(event.id)} />
             ))}
           </View>
         )}
-        
+
         <TouchableOpacity 
           style={styles.viewAllButton} 
           onPress={handleViewAllEvents}
@@ -150,7 +170,7 @@ export default function HomeScreen() {
           </Text>
           <ArrowRight size={16} color={colors.primary} />
         </TouchableOpacity>
-        
+
         <View style={styles.infoSection}>
           <Text style={styles.infoTitle}>
             {t("home.aboutUs")}
