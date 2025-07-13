@@ -32,34 +32,49 @@ export default function EventsScreen() {
 
   /* ---- run once on mount ---- */
   useEffect(() => {
-    // console.log("Mounting Events list ......");
     if (Object.keys(eventsDict).length === 0) fetchEvents();
   }, []);
 
   /* ---- convert dict → array ---- */
-  const events = useMemo(
-    () => Object.values(eventsDict),
-    [eventsDict]
-  );
+  const events = useMemo(() => Object.values(eventsDict), [eventsDict]);
 
   /* ---- filtering ---- */
   const [filter, setFilter] = useState<"all" | "active" | "upcoming" | "past">("all");
 
   const filteredEvents = useMemo(() => {
     if (filter === "all") return events;
-    return events.filter((e) => e.status === filter);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return events.filter((e) => {
+      if (!e.date) return false; // skip if no date
+
+      const eventDate = new Date(e.date);
+      eventDate.setHours(0, 0, 0, 0);
+
+      switch (filter) {
+        case "active":
+          // Events happening today
+          return eventDate.getTime() === today.getTime();
+
+        case "upcoming":
+          // Events strictly after today
+          return eventDate > today;
+
+        case "past":
+          // Events strictly before today
+          return eventDate < today;
+
+        default:
+          return false;
+      }
+    });
   }, [events, filter]);
 
   /* ---- navigation ---- */
   const handleEventPress = (eventId: string) => {
-    //  console.log("Pushing from event list .............. " + eventId);
-     router.push(`/events/${eventId}`);
-    // console.log("Pushing.............. " + eventId);
-    // router.push({
-    //   pathname: '/events/[eventId]',
-    //   params:   { eventId },
-    // });
-    
+    router.push(`/events/${eventId}`);
   };
 
   /* ---- pull-to-refresh ---- */
@@ -71,7 +86,7 @@ export default function EventsScreen() {
   };
 
   /* ---- UI ---- */
-  if (isLoading && events.length === 0) {           // first load
+  if (isLoading && events.length === 0) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" />
