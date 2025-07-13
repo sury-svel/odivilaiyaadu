@@ -31,30 +31,34 @@ export default function HomeScreen() {
   const [logoLoaded, setLogoLoaded] = useState(true);
   const { t } = useTranslation();
 
+  // Convert dict to array of events
   const events = React.useMemo(() => Object.values(eventsDict), [eventsDict]);
 
   useEffect(() => {
     fetchEvents();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const now = new Date();
+  // Get today's date at midnight for consistent comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const adjustedEvents = React.useMemo(() => {
-    return events.map(event => {
-      const eventDate = new Date(event.date);
-      if (eventDate < now) {
-        return { 
-          ...event, 
-          date: now.toISOString(), 
-          status: EventStatus.Active,
-        };
-      }
-      return event;
-    });
-  }, [events, now]);
+  // Filter active events with date on or before today and status "active"
+  const activeEvents = events.filter(event => {
+    if (event.status !== EventStatus.Active) return false;
+    if (!event.date) return false;
+    const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate <= today;
+  });
 
-  const activeEvents = adjustedEvents.filter(event => event.status === EventStatus.Active);
-  const upcomingEvents = adjustedEvents.filter(event => event.status === EventStatus.Upcoming);
+  // Filter upcoming events with date strictly after today and status "upcoming"
+  const upcomingEvents = events.filter(event => {
+    if (event.status !== EventStatus.Upcoming) return false;
+    if (!event.date) return false;
+    const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate > today;
+  });
 
   const handleLoginPress = () => {
     router.push("/(modal)/auth/login");
@@ -322,3 +326,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
