@@ -25,13 +25,32 @@ export default function HomeScreen() {
   const [logoLoaded, setLogoLoaded] = useState(true);
   const { t } = useTranslation();
   
-    /* convert Record → Event[] */
-  const events = React.useMemo(    () => Object.values(eventsDict),    [eventsDict]  );
+  /* convert Record → Event[] */
+  const events = React.useMemo(() => Object.values(eventsDict), [eventsDict]);
 
-  useEffect(() => {    fetchEvents();  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
-  const activeEvents = events.filter(event => event.status === "active");
-  const upcomingEvents = events.filter(event => event.status === "upcoming");
+  useEffect(() => {
+    fetchEvents();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Get today's date at midnight for consistent comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Filter active events with date on or before today
+  const activeEvents = events.filter(event => {
+    if (event.status !== "active") return false;
+    const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate <= today;
+  });
+
+  // Filter upcoming events with date strictly after today
+  const upcomingEvents = events.filter(event => {
+    if (event.status !== "upcoming") return false;
+    const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate > today;
+  });
   
   const handleLoginPress = () => {
     router.push("/(modal)/auth/login");
@@ -49,9 +68,6 @@ export default function HomeScreen() {
     router.push(`/events/${eventId}`);
   };
 
-  // console.log("Is user authenticated? " + isAuthenticated);
-  // console.log("User role ? " + user?.role )
-  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="always">
